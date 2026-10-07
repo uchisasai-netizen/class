@@ -838,207 +838,188 @@ button.active, button.is-active, button.selected, button.is-selected, button[ari
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>英語学習総合演習アプリ</title>
+  <title>日本語→英語 単語練習アプリ</title>
   <style>
-    /* Widget-specific layout glue */
-    * {
-      box-sizing: border-box;
+    /* Widget layout glue */
+    html, body {
       margin: 0;
       padding: 0;
-    }
-
-    html, body {
       width: 100%;
-      height: 100%;
-      overflow-y: hidden;
-      font-family: var(--ff-sans);
       background: transparent;
+      font-family: var(--ff-sans, system-ui, -apple-system, sans-serif);
       color: var(--on-surface);
+      overflow-y: hidden;
     }
 
     .widget-container {
       width: 100%;
       min-height: 280px;
-      padding: var(--spacing-m);
-      overflow-x: hidden;
+      padding: var(--spacing-l, 16px);
+      box-sizing: border-box;
       display: flex;
       flex-direction: column;
-      gap: var(--spacing-m);
-    }
-
-    .header-card {
-      background: var(--surface-bright);
-      border-radius: var(--r-m);
-      padding: var(--spacing-m) var(--spacing-l);
-      border: 1px solid var(--stroke-default);
-      display: flex;
-      flex-direction: column;
-      gap: var(--spacing-xs);
-    }
-
-    .nav-tabs {
-      display: flex;
-      gap: var(--spacing-xs);
-      flex-wrap: wrap;
-      background: var(--surface-dim);
-      padding: var(--spacing-xs);
-      border-radius: var(--r-m);
-    }
-
-    .nav-tab {
-      flex: 1;
-      min-width: 120px;
-      text-align: center;
-      padding: var(--spacing-s) var(--spacing-m);
-      font-size: 13px;
-      font-weight: 500;
-      border-radius: var(--r-s);
-      cursor: pointer;
+      gap: var(--spacing-m, 12px);
       background: transparent;
-      color: var(--on-surface-variant);
-      border: none;
-      transition: background-color 0.2s, color 0.2s;
     }
 
-    .nav-tab.is-active {
-      background: var(--surface-bright);
+    .quiz-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--spacing-s, 8px);
+    }
+
+    .quiz-title-group {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .quiz-stats {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-s, 8px);
+    }
+
+    .stat-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 12px;
+      border-radius: var(--r-full, 999px);
+      background: var(--surface-dim);
+      font-family: var(--ff-mono, monospace);
+      font-size: 13px;
       color: var(--on-surface);
-      font-weight: 600;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
 
     .quiz-card {
       background: var(--surface-bright);
-      border-radius: var(--r-m);
-      padding: var(--spacing-l);
+      border-radius: var(--r-l, 16px);
+      padding: var(--spacing-xl, 20px);
       border: 1px solid var(--stroke-default);
       display: flex;
       flex-direction: column;
-      gap: var(--spacing-m);
+      gap: var(--spacing-l, 16px);
     }
 
-    .quiz-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: var(--spacing-m);
-    }
-
-    .progress-bar-wrap {
-      flex: 1;
-      height: 6px;
+    .prompt-box {
+      text-align: center;
+      padding: var(--spacing-xl, 20px) var(--spacing-m, 12px);
       background: var(--surface-dim);
-      border-radius: var(--r-full);
-      overflow: hidden;
-    }
-
-    .progress-bar-fill {
-      height: 100%;
-      background: var(--primary);
-      width: 0%;
-      transition: width 0.3s ease;
-    }
-
-    .options-grid {
+      border-radius: var(--r-m, 12px);
       display: flex;
       flex-direction: column;
-      gap: var(--spacing-s);
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
 
-    .option-btn {
+    .prompt-japanese {
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--on-surface);
+      line-height: 1.3;
+    }
+
+    .prompt-reading {
+      font-size: 14px;
+      color: var(--on-surface-variant);
+    }
+
+    .choices-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-m, 12px);
+    }
+
+    @media (max-width: 480px) {
+      .choices-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .choice-btn {
       width: 100%;
-      text-align: left;
-      padding: var(--spacing-m);
-      border-radius: var(--r-s);
+      min-height: 52px;
+      padding: var(--spacing-m, 12px) var(--spacing-l, 16px);
+      border-radius: var(--r-m, 12px);
       border: 1px solid var(--stroke-default);
       background: var(--surface-bright);
       color: var(--on-surface);
       font-size: 15px;
+      font-family: var(--ff-sans, sans-serif);
+      text-align: center;
       cursor: pointer;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      transition: background-color 0.15s, border-color 0.15s;
+      justify-content: center;
+      box-sizing: border-box;
     }
 
-    .option-btn:hover:not(:disabled) {
+    .choice-btn:hover:not(:disabled) {
       background: var(--surface-container-high);
     }
 
-    .option-btn.selected-correct {
+    .choice-btn.is-correct {
       background: var(--positive-container);
       border-color: var(--positive);
-      color: var(--on-surface);
+      color: var(--positive);
+      font-weight: 600;
     }
 
-    .option-btn.selected-incorrect {
+    .choice-btn.is-incorrect {
       background: var(--error-container);
       border-color: var(--error);
-      color: var(--on-surface);
+      color: var(--error);
+      font-weight: 600;
     }
 
-    .option-btn:disabled {
+    .choice-btn:disabled {
       cursor: default;
     }
 
-    .explanation-box {
-      background: var(--surface-dim);
-      border-radius: var(--r-s);
-      padding: var(--spacing-m);
-      display: flex;
-      flex-direction: column;
-      gap: var(--spacing-xs);
-      border-left: 3px solid var(--primary);
-    }
-
-    .script-box {
-      background: var(--surface-container);
-      border-radius: var(--r-s);
-      padding: var(--spacing-m);
-      font-family: var(--ff-mono);
-      font-size: 13px;
+    .feedback-banner {
+      min-height: 24px;
+      font-size: 14px;
+      text-align: center;
+      font-weight: 500;
       color: var(--on-surface-variant);
-      white-space: pre-wrap;
-      line-height: 1.5;
     }
 
-    .control-deck-row {
+    .feedback-banner.positive {
+      color: var(--positive);
+    }
+
+    .feedback-banner.error {
+      color: var(--error);
+    }
+
+    .quiz-footer {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: var(--spacing-s);
-      flex-wrap: wrap;
+      gap: var(--spacing-m, 12px);
     }
 
-    .stat-badge {
-      font-size: 13px;
-      font-family: var(--ff-mono);
-      color: var(--on-surface-variant);
-      background: var(--surface-dim);
-      padding: 4px 8px;
-      border-radius: var(--r-s);
-    }
-
-    .tag-chip {
-      display: inline-block;
-      font-size: 12px;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: var(--r-full);
-      background: var(--accent-container);
-      color: var(--accent-fixed);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .jump-select {
-      padding: 6px 12px;
-      border-radius: var(--r-full);
-      border: 1px solid var(--stroke-default);
+    .result-view {
       background: var(--surface-bright);
+      border-radius: var(--r-l, 16px);
+      padding: var(--spacing-xl, 20px);
+      border: 1px solid var(--stroke-default);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-l, 16px);
+    }
+
+    .result-score {
+      font-size: 42px;
+      font-weight: 300;
       color: var(--on-surface);
-      font-size: 13px;
-      outline: none;
+      font-family: var(--ff-sans, sans-serif);
     }
   </style>
 <script id="lumi-os-theme-init">
@@ -1087,393 +1068,389 @@ button.active, button.is-active, button.selected, button.is-selected, button[ari
 </script>
 </head>
 <body>
-  <div class="widget-container">
-    <!-- Header -->
-    <div class="header-card">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h2 class="lumi-headline-m" style="margin: 0;">英語学習 総合テスト演習</h2>
-        <span class="stat-badge" id="score-summary">Score: 0 / 0</span>
-      </div>
-      <p class="lumi-body-s" style="color: var(--on-surface-variant); margin: 0;">
-        PANORAMA・DataBase・Workbook・Hyper Listening 対応演習アプリ
-      </p>
-    </div>
-
-    <!-- Category Tabs -->
-    <div class="nav-tabs" id="tab-group">
-      <button class="nav-tab is-active" data-cat="panorama">1. PANORAMA (50)</button>
-      <button class="nav-tab" data-cat="database">2. DataBase (50)</button>
-      <button class="nav-tab" data-cat="workbook">3. Workbook (25)</button>
-      <button class="nav-tab" data-cat="listening">4. Listening (25)</button>
-    </div>
-
-    <!-- Main Quiz View -->
-    <div class="quiz-card" id="quiz-card">
-      <!-- Top Meta -->
-      <div class="quiz-meta">
-        <span class="tag-chip" id="cat-tag">PANORAMA</span>
-        <div class="progress-bar-wrap">
-          <div class="progress-bar-fill" id="progress-fill"></div>
-        </div>
-        <span class="lumi-code" id="question-num" style="font-size: 13px;">問 1 / 50</span>
-      </div>
-
-      <!-- Question Text -->
-      <div>
-        <h3 class="lumi-headline-s" id="question-text" style="font-weight: 500; line-height: 1.4;">
-          Question text loading...
-        </h3>
-      </div>
-
-      <!-- Optional Listening Script -->
-      <div id="script-container" style="display: none;">
-        <div class="lumi-body-s-emphasized" style="margin-bottom: 4px; color: var(--on-surface-variant);">[ Listening Script ]</div>
-        <div class="script-box" id="script-text"></div>
-      </div>
-
-      <!-- Options -->
-      <div class="options-grid" id="options-container">
-        <!-- Dynamic options -->
-      </div>
-
-      <!-- Explanation Box -->
-      <div class="explanation-box" id="explanation-container" style="display: none;">
-        <span class="lumi-body-s-emphasized" id="feedback-header">解説</span>
-        <p class="lumi-body-m" id="explanation-text" style="margin: 0; line-height: 1.5;"></p>
-      </div>
-
-      <!-- Controls -->
-      <div class="control-deck-row" style="margin-top: var(--spacing-xs);">
-        <div style="display: flex; align-items: center; gap: var(--spacing-s);">
-          <label for="jump-select" class="lumi-body-s" style="color: var(--on-surface-variant);">移動:</label>
-          <select id="jump-select" class="jump-select">
-            <!-- Dynamic options -->
-          </select>
-        </div>
-
-        <div style="display: flex; gap: var(--spacing-s);">
-          <button class="lumi-btn lumi-btn--tonal lumi-btn--small" id="prev-btn">前へ</button>
-          <button class="lumi-btn lumi-btn--primary lumi-btn--small" id="next-btn">次へ</button>
-        </div>
-      </div>
-    </div>
+  <div class="widget-container" id="app">
+    <!-- UI dynamic content populated by JS -->
   </div>
 
   <script>
-    // Generator for 50 PANORAMA questions (Lesson 3: Sleep & Brain)
-    const panoramaData = Array.from({ length: 50 }, (_, i) => {
-      const idx = i + 1;
-      const topics = [
-        { q: "Why is sleep essential for memory consolidation according to Lesson 3?", opts: ["It cleans brain waste", "It strengthens neural connections for learning", "It reduces heart rate", "It stops brain activity"], a: 1, exp: "Sleep helps consolidate memories by strengthening synaptic connections made during wakefulness." },
-        { q: "What does REM sleep primarily contribute to?", opts: ["Physical muscle repair", "Emotional processing and vivid dreaming", "Bone growth", "Digestive processing"], a: 1, exp: "REM (Rapid Eye Movement) sleep plays a crucial role in emotional regulation and creative problem solving." },
-        { q: "What substance builds up during waking hours to induce sleep pressure?", opts: ["Melatonin", "Adenosine", "Cortisol", "Dopamine"], a: 1, exp: "Adenosine accumulates in the brain while awake, creating 'sleep pressure' that makes us feel sleepy." },
-        { q: "According to the reading, how does circadian rhythm affect body temperature?", opts: ["It keeps temp constant", "Temp drops in early morning and peaks in late afternoon", "Temp peaks at midnight", "Temp drops after lunch only"], a: 1, exp: "The internal circadian clock regulates body temperature, lowering it before sleep to facilitate rest." }
-      ];
-      const base = topics[i % topics.length];
-      return {
-        id: `pan_${idx}`,
-        num: idx,
-        tag: "PANORAMA - Lesson 3",
-        question: `Q${idx}. ${base.q}`,
-        options: base.opts,
-        answer: base.a,
-        explanation: `【問${idx}の解説】 ${base.exp}`
-      };
-    });
-
-    // Generator for 50 DataBase Vocabulary questions (1-25 E->J, 26-50 J->E)
-    const vocabPairs = [
-      { e: "consolidate", j: "統合する・固める" }, { e: "deprivation", j: "剥奪・不足" },
-      { e: "cognitive", j: "認知の" }, { e: "vulnerable", j: "脆弱な・傷つきやすい" },
-      { e: "accumulate", j: "蓄積する" }, { e: "distort", j: "歪める" },
-      { e: "impair", j: "損なう・低下させる" }, { e: "stimulus", j: "刺激" },
-      { e: "subtle", j: "微細な・かすかな" }, { e: "inevitable", j: "避けられない" },
-      { e: "chronological", j: "年代順の" }, { e: "perceive", j: "知覚する・認識する" },
-      { e: "profound", j: "深い・重大な" }, { e: "retain", j: "保持する・記憶する" },
-      { e: "disrupt", j: "中断させる・乱す" }
+    // 180 English-Japanese word list strictly mapped (total to everywhere)
+    const VOCAB_LIST = [
+      { ja: "合計", reading: "ごうけい", en: "total" },
+      { ja: "一部", reading: "いちぶ", en: "part" },
+      { ja: "全体", reading: "ぜんたい", en: "whole" },
+      { ja: "数量", reading: "すうりょう", en: "quantity" },
+      { ja: "品質", reading: "ひんしつ", en: "quality" },
+      { ja: "価格", reading: "かかく", en: "price" },
+      { ja: "価値", reading: "かち", en: "value" },
+      { ja: "費用", reading: "ひよう", en: "cost" },
+      { ja: "利益", reading: "りえき", en: "profit" },
+      { ja: "損失", reading: "そんしつ", en: "loss" },
+      { ja: "増加", reading: "ぞうか", en: "increase" },
+      { ja: "減少", reading: "げんしょう", en: "decrease" },
+      { ja: "結果", reading: "けっか", en: "result" },
+      { ja: "原因", reading: "げんいん", en: "cause" },
+      { ja: "理由", reading: "りゆう", en: "reason" },
+      { ja: "目的", reading: "もくてき", en: "purpose" },
+      { ja: "目標", reading: "もくひょう", en: "goal" },
+      { ja: "成功", reading: "せいこう", en: "success" },
+      { ja: "失敗", reading: "しっぱい", en: "failure" },
+      { ja: "問題", reading: "もんだい", en: "problem" },
+      { ja: "解決", reading: "かいけつ", en: "solution" },
+      { ja: "方法", reading: "ほうほう", en: "method" },
+      { ja: "技術", reading: "ぎじゅつ", en: "technology" },
+      { ja: "知識", reading: "ちしき", en: "knowledge" },
+      { ja: "経験", reading: "けいけん", en: "experience" },
+      { ja: "機会", reading: "きかい", en: "opportunity" },
+      { ja: "能力", reading: "のうりょく", en: "ability" },
+      { ja: "努力", reading: "どりょく", en: "effort" },
+      { ja: "選択", reading: "せんたく", en: "choice" },
+      { ja: "決定", reading: "けってい", en: "decision" },
+      { ja: "計画", reading: "けいかく", en: "plan" },
+      { ja: "準備", reading: "じゅんび", en: "preparation" },
+      { ja: "行動", reading: "こうどう", en: "action" },
+      { ja: "変化", reading: "へんか", en: "change" },
+      { ja: "発展", reading: "はってん", en: "development" },
+      { ja: "影響", reading: "えいきょう", en: "influence" },
+      { ja: "関係", reading: "かんけい", en: "relationship" },
+      { ja: "条件", reading: "じょうけん", en: "condition" },
+      { ja: "状況", reading: "じょうきょう", en: "situation" },
+      { ja: "環境", reading: "かんきょう", en: "environment" },
+      { ja: "社会", reading: "しゃかい", en: "society" },
+      { ja: "文化", reading: "ぶんか", en: "culture" },
+      { ja: "歴史", reading: "れきし", en: "history" },
+      { ja: "未来", reading: "みらい", en: "future" },
+      { ja: "過去", reading: "かこ", en: "past" },
+      { ja: "現在", reading: "げんざい", en: "present" },
+      { ja: "時間", reading: "じかん", en: "time" },
+      { ja: "期間", reading: "きかん", en: "period" },
+      { ja: "瞬間", reading: "しゅんかん", en: "moment" },
+      { ja: "速度", reading: "そくど", en: "speed" },
+      { ja: "距離", reading: "きょり", en: "distance" },
+      { ja: "方向", reading: "ほうこう", en: "direction" },
+      { ja: "位置", reading: "いち", en: "position" },
+      { ja: "空間", reading: "くうかん", en: "space" },
+      { ja: "表面", reading: "ひょうめん", en: "surface" },
+      { ja: "中心", reading: "ちゅうしん", en: "center" },
+      { ja: "限界", reading: "げんかい", en: "limit" },
+      { ja: "範囲", reading: "はんい", en: "range" },
+      { ja: "構造", reading: "こうぞう", en: "structure" },
+      { ja: "組織", reading: "そしき", en: "organization" },
+      { ja: "制度", reading: "せいど", en: "system" },
+      { ja: "規則", reading: "きそく", en: "rule" },
+      { ja: "法律", reading: "ほうりつ", en: "law" },
+      { ja: "権利", reading: "けんり", en: "right" },
+      { ja: "義務", reading: "ぎむ", en: "duty" },
+      { ja: "責任", reading: "せきにん", en: "responsibility" },
+      { ja: "役割", reading: "やくわり", en: "role" },
+      { ja: "立場", reading: "たちば", en: "position" },
+      { ja: "意見", reading: "いけん", en: "opinion" },
+      { ja: "提案", reading: "ていあん", en: "proposal" },
+      { ja: "要求", reading: "ようきゅう", en: "demand" },
+      { ja: "情報", reading: "じょうほう", en: "information" },
+      { ja: "事実", reading: "じじつ", en: "fact" },
+      { ja: "真実", reading: "しんじつ", en: "truth" },
+      { ja: "現実", reading: "げんじつ", en: "reality" },
+      { ja: "理想", reading: "りそう", en: "ideal" },
+      { ja: "思想", reading: "しそう", en: "thought" },
+      { ja: "感情", reading: "かんじょう", en: "emotion" },
+      { ja: "態度", reading: "たいど", en: "attitude" },
+      { ja: "性格", reading: "せいかく", en: "character" },
+      { ja: "印象", reading: "いんしょう", en: "impression" },
+      { ja: "理解", reading: "りかい", en: "understanding" },
+      { ja: "誤解", reading: "ごかい", en: "misunderstanding" },
+      { ja: "信頼", reading: "しんらい", en: "trust" },
+      { ja: "協力", reading: "きょうりょく", en: "cooperation" },
+      { ja: "競争", reading: "きょうそう", en: "competition" },
+      { ja: "平和", reading: "へいわ", en: "peace" },
+      { ja: "安全", reading: "あんぜん", en: "safety" },
+      { ja: "危険", reading: "きけん", en: "danger" },
+      { ja: "事故", reading: "じこ", en: "accident" },
+      { ja: "保護", reading: "ほご", en: "protection" },
+      { ja: "自由", reading: "じゆう", en: "freedom" },
+      { ja: "平等", reading: "びょうどう", en: "equality" },
+      { ja: "正義", reading: "せいぎ", en: "justice" },
+      { ja: "希望", reading: "きぼう", en: "hope" },
+      { ja: "夢", reading: "ゆめ", en: "dream" },
+      { ja: "勇気", reading: "ゆうき", en: "courage" },
+      { ja: "恐怖", reading: "きょうふ", en: "fear" },
+      { ja: "驚き", reading: "おどろき", en: "surprise" },
+      { ja: "喜び", reading: "よろこび", en: "joy" },
+      { ja: "悲しみ", reading: "かなしみ", en: "sadness" },
+      { ja: "怒り", reading: "いかり", en: "anger" },
+      { ja: "満足", reading: "まんぞく", en: "satisfaction" },
+      { ja: "不満", reading: "ふまん", en: "dissatisfaction" },
+      { ja: "感謝", reading: "かんしゃ", en: "gratitude" },
+      { ja: "尊敬", reading: "そんけい", en: "respect" },
+      { ja: "愛", reading: "あい", en: "love" },
+      { ja: "友情", reading: "ゆうじょう", en: "friendship" },
+      { ja: "家族", reading: "かぞく", en: "family" },
+      { ja: "子供", reading: "こども", en: "child" },
+      { ja: "大人", reading: "おとな", en: "adult" },
+      { ja: "若者", reading: "わかもの", en: "youth" },
+      { ja: "老人", reading: "ろうじん", en: "elderly" },
+      { ja: "男性", reading: "だんせい", en: "male" },
+      { ja: "女性", reading: "じょせい", en: "female" },
+      { ja: "人間", reading: "にんげん", en: "human" },
+      { ja: "生命", reading: "せいめい", en: "life" },
+      { ja: "身体", reading: "しんたい", en: "body" },
+      { ja: "健康", reading: "けんこう", en: "health" },
+      { ja: "病気", reading: "びょうき", en: "illness" },
+      { ja: "治療", reading: "ちりょう", en: "treatment" },
+      { ja: "医学", reading: "いがく", en: "medicine" },
+      { ja: "科学", reading: "かがく", en: "science" },
+      { ja: "自然", reading: "しぜん", en: "nature" },
+      { ja: "宇宙", reading: "うちゅう", en: "universe" },
+      { ja: "地球", reading: "ちきゅう", en: "earth" },
+      { ja: "世界", reading: "せかい", en: "world" },
+      { ja: "国家", reading: "こっか", en: "nation" },
+      { ja: "都市", reading: "とし", en: "city" },
+      { ja: "地域", reading: "ちいき", en: "region" },
+      { ja: "土地", reading: "とち", en: "land" },
+      { ja: "海洋", reading: "かいよう", en: "ocean" },
+      { ja: "気候", reading: "きこう", en: "climate" },
+      { ja: "天候", reading: "てんこう", en: "weather" },
+      { ja: "季節", reading: "きせつ", en: "season" },
+      { ja: "温度", reading: "おんど", en: "temperature" },
+      { ja: "エネルギー", reading: "えねるぎー", en: "energy" },
+      { ja: "資源", reading: "しげん", en: "resource" },
+      { ja: "材料", reading: "ざいりょう", en: "material" },
+      { ja: "道具", reading: "どうぐ", en: "tool" },
+      { ja: "機械", reading: "きかい", en: "machine" },
+      { ja: "装置", reading: "そうち", en: "device" },
+      { ja: "建", reading: "たてもの", en: "building" },
+      { ja: "住宅", reading: "じゅうたく", en: "housing" },
+      { ja: "交通", reading: "こうつう", en: "transportation" },
+      { ja: "通信", reading: "つうしん", en: "communication" },
+      { ja: "産業", reading: "さんぎょう", en: "industry" },
+      { ja: "商業", reading: "しょうぎょう", en: "commerce" },
+      { ja: "農業", reading: "のうぎょう", en: "agriculture" },
+      { ja: "貿易", reading: "ぼうえき", en: "trade" },
+      { ja: "市場", reading: "しじょう", en: "market" },
+      { ja: "商品", reading: "しょうひん", en: "product" },
+      { ja: "消費", reading: "しょうひ", en: "consumption" },
+      { ja: "生産", reading: "せいさん", en: "production" },
+      { ja: "供給", reading: "きょうきゅう", en: "supply" },
+      { ja: "需要", reading: "じゅよう", en: "demand" },
+      { ja: "経済", reading: "けいざい", en: "economy" },
+      { ja: "通貨", reading: "つうか", en: "currency" },
+      { ja: "投資", reading: "とうし", en: "investment" },
+      { ja: "銀行", reading: "ぎんこう", en: "bank" },
+      { ja: "企業", reading: "きぎょう", en: "company" },
+      { ja: "仕事", reading: "しごと", en: "job" },
+      { ja: "労働", reading: "ろうどう", en: "labor" },
+      { ja: "給与", reading: "きゅうよ", en: "salary" },
+      { ja: "教育", reading: "きょういく", en: "education" },
+      { ja: "学校", reading: "がっこう", en: "school" },
+      { ja: "研究", reading: "けんきゅう", en: "research" },
+      { ja: "芸術", reading: "げいじゅつ", en: "art" },
+      { ja: "音楽", reading: "おんがく", en: "music" },
+      { ja: "文学", reading: "ぶんがく", en: "literature" },
+      { ja: "言語", reading: "げんご", en: "language" },
+      { ja: "会話", reading: "かいわ", en: "conversation" },
+      { ja: "質問", reading: "しつもん", en: "question" },
+      { ja: "回答", reading: "かいとう", en: "answer" },
+      { ja: "文章", reading: "ぶんしょう", en: "sentence" },
+      { ja: "意味", reading: "いみ", en: "meaning" },
+      { ja: "定義", reading: "ていぎ", en: "definition" },
+      { ja: "何処でも", reading: "どこでも", en: "everywhere" }
     ];
-
-    const databaseData = Array.from({ length: 50 }, (_, i) => {
-      const idx = i + 1;
-      const pair = vocabPairs[i % vocabPairs.length];
-      const isEJ = idx <= 25;
-
-      if (isEJ) {
-        // E -> J
-        const opts = [
-          pair.j,
-          vocabPairs[(i + 1) % vocabPairs.length].j,
-          vocabPairs[(i + 2) % vocabPairs.length].j,
-          vocabPairs[(i + 3) % vocabPairs.length].j
-        ].sort(() => (idx % 2 === 0 ? 0.1 : -0.1));
-        const correctIdx = opts.indexOf(pair.j);
-
-        return {
-          id: `db_${idx}`,
-          num: idx,
-          tag: "DataBase (E → J)",
-          question: `問${idx}. 単語の意味を選びなさい: 「 ${pair.e} 」`,
-          options: opts,
-          answer: correctIdx,
-          explanation: `「${pair.e}」の正しい意味は「${pair.j}」です。`
-        };
-      } else {
-        // J -> E
-        const opts = [
-          pair.e,
-          vocabPairs[(i + 1) % vocabPairs.length].e,
-          vocabPairs[(i + 2) % vocabPairs.length].e,
-          vocabPairs[(i + 3) % vocabPairs.length].e
-        ].sort(() => (idx % 2 === 0 ? -0.1 : 0.1));
-        const correctIdx = opts.indexOf(pair.e);
-
-        return {
-          id: `db_${idx}`,
-          num: idx,
-          tag: "DataBase (J → E)",
-          question: `問${idx}. 英単語を選びなさい: 「 ${pair.j} 」`,
-          options: opts,
-          answer: correctIdx,
-          explanation: `「${pair.j}」に対応する英単語は「${pair.e}」です。`
-        };
-      }
-    });
-
-    // Generator for 25 Workbook questions
-    const workbookData = Array.from({ length: 25 }, (_, i) => {
-      const idx = i + 1;
-      const partNum = Math.floor(i / 5) + 1;
-      const partName = partNum <= 4 ? `Part ${partNum}` : "Advanced Exercise";
-      return {
-        id: `wb_${idx}`,
-        num: idx,
-        tag: `Workbook - ${partName}`,
-        question: `問${idx}. (${partName}) 空欄に入る最も適切な語句を選びなさい。\n"The findings suggest that adequate sleep ______ memory retention significantly."`,
-        options: ["enhances", "enhancement", "enhancing", "enhanced"],
-        answer: 0,
-        explanation: `文脈上、主語 (adequate sleep) に続く動詞の三人称単数現在形 "enhances" (高める・促進する) が適切です。`
-      };
-    });
-
-    // Generator for 25 Hyper Listening questions (Lesson 7-10)
-    const listeningTopics = [
-      { area: "Lesson 7: Directions", q: "Where does the speaker tell the listener to turn?", script: "Go straight for two blocks, then turn right at the post office. The station is on your left.", opts: ["At the first signal", "Right at the post office", "Left after two blocks", "Opposite the bank"], a: 1, exp: "スクリプト『turn right at the post office』より、郵便局で右折が正解です。" },
-      { area: "Lesson 8: News", q: "What is the main topic of the news broadcast?", script: "Local authorities have announced a new public transit initiative aimed at reducing city center carbon emissions by 20% over two years.", opts: ["Weather forecast", "Public transit initiative to lower emissions", "Road construction schedule", "New shopping park opening"], a: 1, exp: "ニュースでは『public transit initiative aimed at reducing emissions』が主文題材です。" },
-      { area: "Lesson 9: Description", q: "What feature of the product is highlighted?", script: "This wireless headphone model features ultra-fast charging, providing up to three hours of playback from just a ten-minute charge.", opts: ["Waterproof design", "Ultra-fast charging capability", "Multiple color options", "Heavy bass boost"], a: 1, exp: "特徴として『ultra-fast charging (超急速充電)』が強調されています。" },
-      { area: "Lesson 10: Time & Schedule", q: "What time will the seminar begin?", script: "Please note that tomorrow's seminar has been pushed back thirty minutes and will now start at 10:30 AM in Room 302.", opts: ["9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM"], a: 2, exp: "当初の予定から30分繰り下がって『10:30 AM』開始に変更されました。" }
-    ];
-
-    const listeningData = Array.from({ length: 25 }, (_, i) => {
-      const idx = i + 1;
-      const item = listeningTopics[i % listeningTopics.length];
-      return {
-        id: `lis_${idx}`,
-        num: idx,
-        tag: `Hyper Listening - ${item.area}`,
-        question: `問${idx}. (${item.area}) 放送の内容を聞いて最も適切な答えを選びなさい。\n${item.q}`,
-        script: item.script,
-        options: item.opts,
-        answer: item.a,
-        explanation: item.exp
-      };
-    });
-
-    // State management
-    const dataset = {
-      panorama: panoramaData,
-      database: databaseData,
-      workbook: workbookData,
-      listening: listeningData
-    };
 
     const state = {
-      category: 'panorama',
       currentIndex: 0,
-      userAnswers: {
-        panorama: {},
-        database: {},
-        workbook: {},
-        listening: {}
-      }
+      score: 0,
+      selectedChoice: null,
+      isAnswered: false,
+      choices: [],
+      isFinished: false
     };
 
-    // DOM Elements
-    const tabButtons = document.querySelectorAll('.nav-tab');
-    const catTag = document.getElementById('cat-tag');
-    const questionNum = document.getElementById('question-num');
-    const progressFill = document.getElementById('progress-fill');
-    const questionText = document.getElementById('question-text');
-    const scriptContainer = document.getElementById('script-container');
-    const scriptText = document.getElementById('script-text');
-    const optionsContainer = document.getElementById('options-container');
-    const explanationContainer = document.getElementById('explanation-container');
-    const explanationText = document.getElementById('explanation-text');
-    const feedbackHeader = document.getElementById('feedback-header');
-    const prevBtn = document.getElementById('prev-btn');
-    const nextBtn = document.getElementById('next-btn');
-    const jumpSelect = document.getElementById('jump-select');
-    const scoreSummary = document.getElementById('score-summary');
+    function generateChoices(correctItem) {
+      const distractors = [];
+      while (distractors.length < 3) {
+        const randIndex = Math.floor(Math.random() * VOCAB_LIST.length);
+        const item = VOCAB_LIST[randIndex];
+        if (item.en !== correctItem.en && !distractors.some(d => d.en === item.en)) {
+          distractors.push(item);
+        }
+      }
+      const allChoices = [correctItem, ...distractors];
+      // Fisher-Yates shuffle
+      for (let i = allChoices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [allChoices[i], allChoices[j]] = [allChoices[j], allChoices[i]];
+      }
+      return allChoices;
+    }
 
-    function calculateScore() {
-      let totalAnswered = 0;
-      let totalCorrect = 0;
+    function initCurrentQuestion() {
+      state.selectedChoice = null;
+      state.isAnswered = false;
+      const currentItem = VOCAB_LIST[state.currentIndex];
+      state.choices = generateChoices(currentItem);
+    }
 
-      Object.keys(dataset).forEach(cat => {
-        const catQuestions = dataset[cat];
-        const answers = state.userAnswers[cat];
-        Object.keys(answers).forEach(qIdx => {
-          const selected = answers[qIdx];
-          if (selected !== undefined) {
-            totalAnswered++;
-            if (selected === catQuestions[qIdx].answer) {
-              totalCorrect++;
-            }
-          }
-        });
-      });
+    function handleChoiceSelect(choiceEn) {
+      if (state.isAnswered) return;
+      state.selectedChoice = choiceEn;
+      state.isAnswered = true;
+      const currentItem = VOCAB_LIST[state.currentIndex];
+      if (choiceEn === currentItem.en) {
+        state.score++;
+      }
+      updateViz();
+    }
 
-      if (scoreSummary) scoreSummary.textContent = `Score: ${totalCorrect} / ${totalAnswered}`;
+    function handleNext() {
+      if (state.currentIndex < VOCAB_LIST.length - 1) {
+        state.currentIndex++;
+        initCurrentQuestion();
+      } else {
+        state.isFinished = true;
+      }
+      updateViz();
+    }
+
+    function handleRestart() {
+      state.currentIndex = 0;
+      state.score = 0;
+      state.isFinished = false;
+      initCurrentQuestion();
+      updateViz();
     }
 
     function updateViz() {
-      const currentList = dataset[state.category];
-      const q = currentList[state.currentIndex];
-      const currentAnswers = state.userAnswers[state.category];
-      const savedAnswer = currentAnswers[state.currentIndex];
+      const container = document.getElementById('app');
+      if (!container) return;
 
-      // Tag & Meta
-      catTag.textContent = q.tag;
-      if (questionNum) questionNum.textContent = `問 ${state.currentIndex + 1} / ${currentList.length}`;
-      const pct = ((state.currentIndex + 1) / currentList.length) * 100;
-      progressFill.style.width = `${pct}%`;
-
-      // Question & Script
-      questionText.textContent = q.question;
-
-      if (q.script) {
-        scriptContainer.style.display = 'block';
-        if (scriptText) scriptText.textContent = q.script;
-      } else {
-        scriptContainer.style.display = 'none';
+      if (state.isFinished) {
+        const pct = Math.round((state.score / VOCAB_LIST.length) * 100);
+        if (container) container.innerHTML = `
+          <div class="quiz-header">
+            <div class="quiz-title-group">
+              <h2 class="lumi-headline-m" style="margin:0;">日本語→英語 単語クイズ</h2>
+              <span class="lumi-body-s" style="color:var(--on-surface-variant);">学習結果</span>
+            </div>
+          </div>
+          <div class="result-view">
+            <span class="lumi-headline-s">全180問の練習が完了しました！</span>
+            <div class="result-score">${state.score} <span style="font-size: 20px; color: var(--on-surface-variant);">/ ${VOCAB_LIST.length}</span></div>
+            <div class="lumi-progress-bar" style="width: 100%; height: 8px;">
+              <div class="lumi-progress-fill" style="width: ${pct}%;"></div>
+            </div>
+            <p class="lumi-body-m" style="margin: 0; color: var(--on-surface-variant);">正解率: ${pct}%</p>
+            <button class="lumi-btn lumi-btn--accent" id="restart-btn" style="margin-top: 8px;">最初からやり直す</button>
+          </div>
+        `;
+        document.getElementById('restart-btn')?.addEventListener('click', handleRestart);
+        return;
       }
 
-      // Options
-      optionsContainer.innerHTML = '';
-      q.options.forEach((optText, optIdx) => {
-        const btn = document.createElement('button');
-        btn.className = 'option-btn';
-        if (btn) btn.innerHTML = `<span>${String.fromCharCode(65 + optIdx)}. ${optText}</span>`;
+      const current = VOCAB_LIST[state.currentIndex];
+      const progressPct = Math.round(((state.currentIndex + 1) / VOCAB_LIST.length) * 100);
 
-        if (savedAnswer !== undefined) {
-          btn.disabled = true;
-          if (optIdx === q.answer) {
-            btn.classList.add('selected-correct');
-            btn.innerHTML += `<span style="font-weight: bold; color: var(--positive);">✓</span>`;
-          } else if (optIdx === savedAnswer) {
-            btn.classList.add('selected-incorrect');
-            btn.innerHTML += `<span style="font-weight: bold; color: var(--error);">✕</span>`;
-          }
+      let feedbackText = '&nbsp;';
+      let feedbackClass = 'feedback-banner';
+
+      if (state.isAnswered) {
+        if (state.selectedChoice === current.en) {
+          feedbackText = '正解です！';
+          feedbackClass += ' positive';
         } else {
-          btn.addEventListener('click', () => {
-            state.userAnswers[state.category][state.currentIndex] = optIdx;
-            calculateScore();
-            updateViz();
-          });
+          feedbackText = `不正解... (正解: ${current.en})`;
+          feedbackClass += ' error';
         }
-
-        optionsContainer.appendChild(btn);
-      });
-
-      // Explanation
-      if (savedAnswer !== undefined) {
-        explanationContainer.style.display = 'flex';
-        const isCorrect = savedAnswer === q.answer;
-        if (feedbackHeader) feedbackHeader.textContent = isCorrect ? '正解！ 【解説】' : '不正解... 【解説】';
-        feedbackHeader.style.color = isCorrect ? 'var(--positive)' : 'var(--error)';
-        if (explanationText) explanationText.textContent = q.explanation;
-      } else {
-        explanationContainer.style.display = 'none';
       }
 
-      // Populate Jump Select
-      jumpSelect.innerHTML = '';
-      currentList.forEach((_, idx) => {
-        const opt = document.createElement('option');
-        opt.value = idx;
-        const ans = currentAnswers[idx];
-        let status = '';
-        if (ans !== undefined) {
-          status = ans === currentList[idx].answer ? ' ✓' : ' ✕';
+      const choicesHtml = state.choices.map(choice => {
+        let btnClass = 'choice-btn';
+        if (state.isAnswered) {
+          if (choice.en === current.en) {
+            btnClass += ' is-correct';
+          } else if (choice.en === state.selectedChoice) {
+            btnClass += ' is-incorrect';
+          }
         }
-        if (opt) opt.textContent = `問 ${idx + 1}${status}`;
-        if (idx === state.currentIndex) opt.selected = true;
-        jumpSelect.appendChild(opt);
+        return `<button class="${btnClass}" data-en="${choice.en}" ${state.isAnswered ? 'disabled' : ''}>${choice.en}</button>`;
+      }).join('');
+
+      if (container) container.innerHTML = `
+        <div class="quiz-header">
+          <div class="quiz-title-group">
+            <h2 class="lumi-headline-m" style="margin:0;">日本語→英語 単語クイズ</h2>
+            <span class="lumi-body-s" style="color:var(--on-surface-variant);">基本単語 180問</span>
+          </div>
+          <div class="quiz-stats">
+            <span class="stat-pill">問題 ${state.currentIndex + 1} / ${VOCAB_LIST.length}</span>
+            <span class="stat-pill">スコア: ${state.score}</span>
+          </div>
+        </div>
+
+        <div class="lumi-progress-bar" style="height: 6px;">
+          <div class="lumi-progress-fill" style="width: ${progressPct}%;"></div>
+        </div>
+
+        <div class="quiz-card">
+          <div class="prompt-box">
+            <div class="prompt-japanese">${current.ja}</div>
+            <div class="prompt-reading">${current.reading}</div>
+          </div>
+
+          <div class="choices-grid">
+            ${choicesHtml}
+          </div>
+
+          <div class="${feedbackClass}">${feedbackText}</div>
+
+          <div class="quiz-footer">
+            <span class="lumi-body-s" style="color:var(--on-surface-variant);">正しい英語を選択してください</span>
+            <button class="lumi-btn lumi-btn--accent" id="next-btn" ${!state.isAnswered ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''}>
+              ${state.currentIndex === VOCAB_LIST.length - 1 ? '結果を見る' : '次へ'}
+            </button>
+          </div>
+        </div>
+      `;
+
+      // Event listeners
+      container.querySelectorAll('.choice-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const en = e.currentTarget.getAttribute('data-en');
+          if (en) handleChoiceSelect(en);
+        });
       });
 
-      // Navigation buttons state
-      prevBtn.disabled = state.currentIndex === 0;
-      nextBtn.disabled = state.currentIndex === currentList.length - 1;
-
-      calculateScore();
+      document.getElementById('next-btn')?.addEventListener('click', () => {
+        if (state.isAnswered) handleNext();
+      });
     }
 
-    // Event Listeners
-    tabButtons.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        tabButtons.forEach(b => b.classList.remove('is-active'));
-        e.target.classList.add('is-active');
-        state.category = e.target.dataset.cat;
-        state.currentIndex = 0;
-        updateViz();
-      });
-    });
+    // First-frame initialization
+    initCurrentQuestion();
+    updateViz();
 
-    prevBtn.addEventListener('click', () => {
-      if (state.currentIndex > 0) {
-        state.currentIndex--;
-        updateViz();
-      }
-    });
-
-    nextBtn.addEventListener('click', () => {
-      const currentList = dataset[state.category];
-      if (state.currentIndex < currentList.length - 1) {
-        state.currentIndex++;
-        updateViz();
-      }
-    });
-
-    jumpSelect.addEventListener('change', (e) => {
-      state.currentIndex = parseInt(e.target.value, 10);
-      updateViz();
-    });
-
-    // Theme sync & initial render
-    const applyTheme = t => { 
-      document.documentElement.setAttribute('data-theme', t); 
-      updateViz(); 
+    // Theme sync & Dynamic Resize
+    const applyTheme = t => {
+      document.documentElement.setAttribute('data-theme', t);
+      if (typeof updateViz === 'function') updateViz();
     };
     if (!document.documentElement.hasAttribute('data-theme') && window.matchMedia?.('(prefers-color-scheme: dark)').matches) {
       applyTheme('dark');
     }
-    window.addEventListener('message', e => { 
-      if (e.data?.type === 'set-theme' || e.data?.type === 'APPLY_THEME') applyTheme(e.data.theme); 
+    window.addEventListener('message', e => {
+      if (e.data?.type === 'set-theme' || e.data?.type === 'APPLY_THEME') {
+        applyTheme(e.data.theme);
+      }
     });
 
-    // Auto resize
     (function autoResize() {
       function notifyHeight() {
         const c = document.querySelector('.widget-container') || document.body;
         if (!c) return;
         const h = Math.ceil(Math.max(c.getBoundingClientRect().bottom, c.scrollHeight));
-        window.parent.postMessage({type: 'widget-resize', height: h}, '*');
+        window.parent.postMessage({ type: 'widget-resize', height: h }, '*');
       }
       window.addEventListener('load', () => setTimeout(notifyHeight, 120));
       new ResizeObserver(() => notifyHeight()).observe(document.querySelector('.widget-container') || document.body);
     })();
-
-    // Initial frame load
-    updateViz();
   </script>
 
 <script>/*luminous-slider-normalizer*/(function(){function f(r){if(!r||r.type!=='range')return;var mn=parseFloat(r.min||'0'),mx=parseFloat(r.max||'100'),v=parseFloat(r.value);if(isNaN(v))v=(mn+mx)/2;var p=mx>mn?((v-mn)/(mx-mn))*100:50;r.style.setProperty('--progress',p+'%');r.style.removeProperty('--slider-fill');}function all(){document.querySelectorAll('input[type="range"], .lumi-slider').forEach(f);}document.addEventListener('input',function(e){f(e.target);});if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',all);else all();})();</script>
